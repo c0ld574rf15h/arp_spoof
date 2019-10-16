@@ -1,7 +1,5 @@
 ## Demo Code for ARP Spoofing
 
----
-
 ### Usage
 
 ARP Spoofing to specified target
