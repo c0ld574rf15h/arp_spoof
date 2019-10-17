@@ -50,3 +50,5 @@ typedef struct ip_packet {
 
 int pcap_next_handler(int res, struct pcap_pkthdr *hdr);
 void send_arp(pcap_t *handle, int opcode, BYTE *snd_mac, BYTE *snd_ip, BYTE *trg_mac, BYTE *trg_ip);
+int check_relay(const BYTE *data, const BYTE *attacker_IP);
+int check_request(const BYTE *data, const BYTE *attacker_IP);
