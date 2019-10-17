@@ -1,16 +1,19 @@
 #include "packet.h"
 #include "address.h"
 #include "utils.h"
+#include "filter.h"
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
 #include <pcap.h>
+#include <string.h>
+#include <stdlib.h>
 
 void get_HW_IP(BYTE *hw_addr, BYTE *proto_addr, const char *dev) {
     struct ifreq ifr;
     int s = socket(AF_INET, SOCK_DGRAM, 0);
     strcpy(ifr.ifr_name, dev);
-
+    
     // Fetch HW address
     ioctl(s, SIOCGIFHWADDR, &ifr);
     memcpy(hw_addr, ifr.ifr_hwaddr.sa_data, HW_ADDR_LEN);
@@ -20,7 +23,7 @@ void get_HW_IP(BYTE *hw_addr, BYTE *proto_addr, const char *dev) {
     memcpy(proto_addr, ifr.ifr_addr.sa_data + 2, IP_ADDR_LEN);
 }
 
-void get_host_MAC(BYTE *hw_addr, BYTE *rcv_hw_addr, BYTE *snd_proto_addr, pcap_t *handle) {
+int get_host_MAC(BYTE *hw_addr, BYTE *rcv_hw_addr, BYTE *snd_proto_addr, pcap_t *handle) {
     struct pcap_pkthdr *header;
     const BYTE *data;
 
