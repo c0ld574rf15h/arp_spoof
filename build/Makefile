@@ -2,10 +2,10 @@ EXE = arp_spoof
 CC = gcc
 
 $(EXE) : main.o
-	$(CC) -o $(EXE) main.o -L ../bin
+	$(CC) -L ../bin -o $(EXE) main.o -larp -lpcap
 
 main.o : main.c
-	$(CC) -o main.o -c main.c -I../include
+	$(CC) -o main.o -c -I../include main.c
 
 clean:
 	rm -f main.o $(EXE)
