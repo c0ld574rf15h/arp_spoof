@@ -13,6 +13,11 @@ int filter_ARP(int opcode, const BYTE *data) {
     } else return FAIL;
 }
 
+int filter_IP(const BYTE *data) {
+    ETH *eth_hdr = (ETH*)data;
+    return (ntohs(eth_hdr -> eth_type) == TYPE_IPV4) ? SUCCESS : FAIL;
+}
+
 int filter_src(int type, const BYTE *addr, const BYTE *data) {
     ETH *eth_hdr = (ETH*)data;
     switch(ntohs(eth_hdr->eth_type)) {
