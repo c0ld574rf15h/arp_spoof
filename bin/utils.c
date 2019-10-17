@@ -6,7 +6,7 @@
 
 int check_args(int argc, const char *exe) {
     if(argc != 4) {
-        fprintf(stderr, "[-] Usage : %s <interface> <victim IP> <gateway IP>");
+        fprintf(stderr, "[-] Usage : %s <interface> <victim IP> <gateway IP>\n");
         return FAIL;
     }
     else return SUCCESS;
