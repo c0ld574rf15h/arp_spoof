@@ -34,7 +34,8 @@ typedef struct ip_hdr {
     BYTE ver_hdl, tos;
     WORD ip_len;
     WORD id, frag_off;
-    BYTE ttl, protocol, hdr_cecksum;
+    BYTE ttl, protocol;
+    WORD hdr_checksum;
     BYTE src_addr[IP_ADDR_LEN], dst_addr[IP_ADDR_LEN];
 } IP;
 
@@ -50,5 +51,5 @@ typedef struct ip_packet {
 
 int pcap_next_handler(int res, struct pcap_pkthdr *hdr);
 void send_arp(pcap_t *handle, int opcode, BYTE *snd_mac, BYTE *snd_ip, BYTE *trg_mac, BYTE *trg_ip);
-int check_relay(const BYTE *data, const BYTE *attacker_IP);
-int check_request(const BYTE *data, const BYTE *attacker_IP);
+int check_relay(const BYTE *data, const BYTE *sender_MAC, const BYTE *attacker_IP);
+int check_request(const BYTE *data, const BYTE *sender_MAC, const BYTE *attacker_IP);

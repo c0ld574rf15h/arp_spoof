@@ -1,5 +1,6 @@
 #include "packet.h"
 #include "utils.h"
+#include "filter.h"
 #include <pcap.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,8 +18,6 @@ int pcap_next_handler(int res, struct pcap_pkthdr *hdr) {
         case PCAP_ERROR_BREAK:
             fprintf(stderr, "[-] No more packets in savefile");
             flag = FAIL; break;
-        default:
-            fprintf(stdout, "[+] Packet captured ( %dB )\n", hdr->caplen);
     }
     return flag;
 }
@@ -45,10 +44,14 @@ void send_arp(pcap_t *handle, int opcode, BYTE *snd_mac, BYTE *snd_ip, BYTE *trg
         fprintf(stderr, "[-] Failed sending packet\n");
 }
 
-int check_relay(const BYTE *data, const BYTE *attacker_IP) {
-    return (filter_IP(data) == SUCCESS && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;
+int check_request(const BYTE * data, const BYTE *sender_MAC, const BYTE *attacker_IP) {
+    return (filter_ARP(OP_REQ, data) == SUCCESS                                     // 1. ARP request
+            && filter_src(HW, sender_MAC, data) == SUCCESS                          // 2. Sent by sender
+            && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;      // 3. Destination IP not mine
 }
 
-int check_request(const BYTE * data, const BYTE *attacker_IP) {
-    return (filter_ARP(OP_REQ, data) == SUCCESS && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;
+int check_relay(const BYTE *data, const BYTE *sender_MAC, const BYTE *attacker_IP) {
+    return (filter_IP(data) == SUCCESS
+            && filter_src(HW, sender_MAC, data) == SUCCESS
+            && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;
 }
