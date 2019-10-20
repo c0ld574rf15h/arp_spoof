@@ -25,11 +25,13 @@ int filter_src(int type, const BYTE *addr, const BYTE *data) {
             ARP *arp_hdr = (ARP*)(data + SZ_ETHERNET);
             if(type == PROTO) return (memcmp(arp_hdr->snd_proto_addr, addr, IP_ADDR_LEN) ? FAIL : SUCCESS);
             else if(type == HW) return (memcmp(eth_hdr->src_hw_addr, addr, HW_ADDR_LEN) ? FAIL : SUCCESS);
+            else return FAIL;
         }
         case TYPE_IPV4: {
             IP *ip_hdr = (IP*)(data + SZ_ETHERNET);
             if(type == PROTO) return (memcmp(ip_hdr->src_addr, addr, IP_ADDR_LEN) ? FAIL : SUCCESS);
-            else if(type ==HW) return (memcmp(eth_hdr->src_hw_addr, addr, HW_ADDR_LEN) ? FAIL : SUCCESS);
+            else if(type == HW) return (memcmp(eth_hdr->src_hw_addr, addr, HW_ADDR_LEN) ? FAIL : SUCCESS);
+            else return FAIL;
         }
     }
     return FAIL;    // Return fail by default

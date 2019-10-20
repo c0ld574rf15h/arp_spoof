@@ -8,7 +8,7 @@
 #define PROTO   1
 #define HW      2
 #define DEC     10
-#define PERIOD  3
+#define PERIOD  1
 
 int check_args(int argc, const char *exe);
 void parse_bytes(BYTE *stream, char div, const char *str, int size, int base);
