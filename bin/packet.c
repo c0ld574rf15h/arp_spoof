@@ -29,11 +29,11 @@ void send_arp(pcap_t *handle, int opcode, BYTE *snd_mac, BYTE *snd_ip, BYTE *trg
 
     memcpy(eth_hdr.dst_hw_addr, opcode == OP_REQ ? BROADCAST : trg_mac, HW_ADDR_LEN);
     memcpy(eth_hdr.src_hw_addr, snd_mac, HW_ADDR_LEN);
-    eth_hdr.eth_type = ntohs(TYPE_ARP);
+    eth_hdr.eth_type = htons(TYPE_ARP);
 
-    arp_hdr.hw_type = ntohs(TYPE_ETH); arp_hdr.proto_type = ntohs(TYPE_IPV4);
+    arp_hdr.hw_type = htons(TYPE_ETH); arp_hdr.proto_type = htons(TYPE_IPV4);
     arp_hdr.hw_addr_len = HW_ADDR_LEN; arp_hdr.proto_addr_len = IP_ADDR_LEN;
-    arp_hdr.opcode = ntohs(opcode);
+    arp_hdr.opcode = htons(opcode);
     memcpy(arp_hdr.snd_hw_addr, snd_mac, HW_ADDR_LEN);
     memcpy(arp_hdr.snd_proto_addr, snd_ip, IP_ADDR_LEN);
     memcpy(arp_hdr.trg_hw_addr, opcode == OP_REQ ? NULL_ADDR : trg_mac, HW_ADDR_LEN);
@@ -51,7 +51,7 @@ int check_request(const BYTE * data, const BYTE *sender_MAC, const BYTE *attacke
 }
 
 int check_relay(const BYTE *data, const BYTE *sender_MAC, const BYTE *attacker_IP) {
-    return (filter_IP(data) == SUCCESS
-            && filter_src(HW, sender_MAC, data) == SUCCESS
-            && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;
+    return (filter_IP(data) == SUCCESS                                              // 1. ether type is IP
+            && filter_src(HW, sender_MAC, data) == SUCCESS                          // 2. 
+            && filter_dst(PROTO, attacker_IP, data) == FAIL) ? SUCCESS : FAIL;      // 3. 
 }
