@@ -5,7 +5,7 @@
 #include <string.h>
 
 int check_args(int argc, const char *exe) {
-    if(argc != 4) {
+    if(argc < 4 | argc & 1) {
         fprintf(stderr, "[-] Usage : %s <interface> <victim IP> <gateway IP>\n");
         return FAIL;
     }
