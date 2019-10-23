@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
 
     // 2. Store Sender / Target IP address
     for(int i=1;i<=sess_num;++i) {
-        parse_bytes(sess[i].sender_IP, '.', argv[i<<1], IP_ADDR_LEN, DEC);
-        parse_bytes(sess[i].target_IP, '.', argv[i<<1+1], IP_ADDR_LEN, DEC);
+        parse_bytes(sess[i-1].sender_IP, '.', argv[i*2], IP_ADDR_LEN, DEC);
+        parse_bytes(sess[i-1].target_IP, '.', argv[i*2+1], IP_ADDR_LEN, DEC);
     }
 
     // 3. Fetch Localhost HW Address
